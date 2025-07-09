@@ -1,5 +1,4 @@
 ﻿// src/components/Navbar.jsx
-
 import React, { useEffect, useState } from 'react';
 import { logout } from '../utils/auth';
 
@@ -13,7 +12,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <div className="bg-white shadow p-4 flex justify-between items-center">
+    <div className="bg-white shadow p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4">
       <div className="text-xl font-bold text-gray-800">
         D’PoIN Admin Panel
         <span className="text-sm text-gray-500 ml-3 font-normal">
@@ -21,13 +20,13 @@ export default function Navbar() {
         </span>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 flex-wrap justify-end text-sm">
         <span className="text-gray-700 font-medium hidden sm:block">
           👋 Hai, {userName}
         </span>
         <button
           onClick={logout}
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+          className="bg-red-500 text-white px-3 py-1.5 rounded hover:bg-red-600 text-xs"
         >
           Logout
         </button>
