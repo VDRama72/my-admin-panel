@@ -6,7 +6,7 @@ const baseURL = import.meta.env.VITE_BACKEND_URL?.replace('/api', '') || '';
 
 export default function FoodCard({ food, onAddToCart }) {
   return (
-    <div className="bg-white border rounded-md shadow-sm hover:shadow-md transition-all overflow-hidden w-full max-w-[160px] sm:max-w-[180px] text-left">
+    <div className="bg-white border rounded-md shadow-sm hover:shadow-md transition-all overflow-hidden w-full max-w-[140px] sm:max-w-[160px] text-left">
       <div className="w-full aspect-[4/3] bg-gray-100 overflow-hidden">
         <img
           src={

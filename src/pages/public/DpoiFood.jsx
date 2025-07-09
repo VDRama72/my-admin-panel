@@ -139,15 +139,17 @@ export default function DpoiFood() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-red-600 text-white py-4 px-6 flex justify-between items-center sticky top-0 z-50 shadow">
-        <div className="flex items-center gap-3">
-          <Link to="/" className="text-2xl flex items-center gap-2">
-            <span>🏠</span><span className="text-lg font-semibold">Etalase</span>
-          </Link>
-          <h1 className="text-xl font-bold ml-4">🍱 D'PoIN Food</h1>
-        </div>
-        <Link to="/login" className="bg-white text-red-600 px-4 py-2 rounded hover:bg-gray-100">Login</Link>
-      </header>
+      <header className="bg-red-600 text-white py-3 px-4 flex justify-between items-center sticky top-0 z-50 shadow">
+  <div className="flex items-center gap-2">
+    <Link to="/" className="text-base flex items-center gap-1">
+      <span>🏠</span><span className="font-semibold">Etalase</span>
+    </Link>
+    <h1 className="text-base font-bold ml-2">🍱 D'PoIN Food</h1>
+  </div>
+  <Link to="/login" className="text-xs bg-white text-red-600 px-3 py-1 rounded hover:bg-gray-100">
+    Login
+  </Link>
+</header>
 
       <section className="text-center py-10 bg-gradient-to-r from-red-50 via-white to-red-50">
         <h2 className="text-3xl font-bold text-red-600 mb-2">Lapar? Tenang, Ada D’PoIN Food</h2>
