@@ -48,7 +48,6 @@ export default function App() {
   return (
     <Router>
       <Routes>
-
         {/* 🔓 Halaman Publik */}
         {!token && (
           <>
@@ -62,51 +61,51 @@ export default function App() {
           </>
         )}
 
-        {/* 🔐 Admin */}
-        {token && role === 'admin' && (
+        {/* 🔐 Role-based Routing */}
+        {token && (
           <>
-            <Route path="/*" element={<AppAdmin />} />
-            <Route path="/finance/last" element={<FinanceLastTransaction />} />
-          </>
-        )}
+            {role === 'admin' && (
+              <>
+                <Route path="/*" element={<AppAdmin />} />
+                <Route path="/finance/last" element={<FinanceLastTransaction />} />
+              </>
+            )}
 
-        {/* 🔐 Seller */}
-        {token && role === 'penjual' && (
-          <>
-            <Route path="/seller/disclaimer" element={<SellerDisclaimer />} />
-            {agreed ? (
-              <Route path="/seller/*" element={<SellerLayout />}>
-                <Route index element={<SellerDashboard />} />
-                <Route path="products" element={<ProductManagementSeller />} />
-              </Route>
-            ) : (
-              <Route path="/seller/*" element={<Navigate to="/seller/disclaimer" />} />
+            {role === 'penjual' && (
+              <>
+                <Route path="/seller/disclaimer" element={<SellerDisclaimer />} />
+                {agreed ? (
+                  <Route path="/seller/*" element={<SellerLayout />}>
+                    <Route index element={<SellerDashboard />} />
+                    <Route path="products" element={<ProductManagementSeller />} />
+                  </Route>
+                ) : (
+                  <Route path="/seller/*" element={<Navigate to="/seller/disclaimer" />} />
+                )}
+              </>
+            )}
+
+            {role === 'driver' && (
+              <>
+                <Route path="/dashboard/driver" element={<DriverDashboardFinal />} />
+                <Route path="/driver/order/:id" element={<DpoiDriverOrderDetail />} />
+                <Route path="*" element={<Navigate to="/dashboard/driver" />} />
+              </>
+            )}
+
+            {role === 'keuangan' && (
+              <>
+                <Route path="/finance/user" element={<FinanceUserPage />} />
+                <Route path="*" element={<Navigate to="/finance/user" />} />
+              </>
+            )}
+
+            {/* ❌ Role tidak valid */}
+            {!['admin', 'penjual', 'driver', 'keuangan'].includes(role) && (
+              <Route path="*" element={<Navigate to="/" />} />
             )}
           </>
         )}
-
-        {/* 🔐 Driver */}
-        {token && role === 'driver' && (
-          <>
-            <Route path="/dashboard/driver" element={<DriverDashboardFinal />} />
-            <Route path="/driver/order/:id" element={<DpoiDriverOrderDetail />} />
-            <Route path="*" element={<Navigate to="/dashboard/driver" />} />
-          </>
-        )}
-
-        {/* 🔐 Keuangan */}
-        {token && role === 'keuangan' && (
-          <>
-            <Route path="/finance/user" element={<FinanceUserPage />} />
-            <Route path="*" element={<Navigate to="/finance/user" />} />
-          </>
-        )}
-
-        {/* ❌ Role tidak valid */}
-        {token && !['admin', 'penjual', 'driver', 'keuangan'].includes(role) && (
-          <Route path="*" element={<Navigate to="/" />} />
-        )}
-
       </Routes>
     </Router>
   );

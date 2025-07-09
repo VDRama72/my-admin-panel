@@ -12,6 +12,7 @@ export function logout() {
   // 🔁 Paksa sinkronisasi ke komponen yang memakai localStorage
   window.dispatchEvent(new Event('storage'));
 
-  // ✅ Redirect langsung ke Etalase
+  // ✅ Tambahkan delay agar sinkronisasi selesai
+setTimeout(() => {
   window.location.href = '/';
-}
+}, 100);
