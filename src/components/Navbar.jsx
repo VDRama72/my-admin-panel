@@ -13,16 +13,21 @@ export default function Navbar() {
   }, []);
 
   return (
-    <div className="bg-white shadow px-4 py-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0">
+    <div className="bg-white shadow p-4 flex justify-between items-center px-4 sm:px-6">
       <div className="text-lg sm:text-xl font-bold text-gray-800">
         D’PoIN Admin Panel
-        <span className="text-sm text-gray-500 ml-2 font-normal">({role?.toUpperCase()})</span>
+        <span className="text-sm text-gray-500 ml-3 font-normal hidden sm:inline">
+          ({role?.toUpperCase()})
+        </span>
       </div>
-      <div className="flex items-center gap-3">
-        <span className="text-gray-700 text-sm sm:text-base">👋 Hai, {userName}</span>
+
+      <div className="flex items-center gap-2 sm:gap-4">
+        <span className="text-gray-700 font-medium hidden sm:block">
+          👋 Hai, {userName}
+        </span>
         <button
           onClick={logout}
-          className="bg-red-500 text-white px-3 py-1.5 text-sm rounded hover:bg-red-600"
+          className="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 text-sm"
         >
           Logout
         </button>

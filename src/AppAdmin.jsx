@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar'; // ✅ ini sebelumnya yang error
+import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
 import DashboardAdmin from './pages/dashboards/DashboardAdmin';
@@ -19,16 +19,15 @@ import FinanceLastTransactions from './pages/finance/FinanceLastTransaction';
 
 export default function AppAdmin() {
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
-      {/* ✅ Navbar at top */}
-      <Navbar />
+    <div className="flex h-screen bg-gray-100">
+      {/* Sidebar (hilang di HP) */}
+      <Sidebar />
 
-      {/* ✅ Responsive layout */}
-      <div className="flex flex-1 flex-col sm:flex-row overflow-hidden">
-        {/* Sidebar */}
-        <Sidebar />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Navbar tetap di atas */}
+        <Navbar />
 
-        {/* Konten utama */}
+        {/* Main content */}
         <main className="flex-1 overflow-y-auto p-4 sm:p-6">
           <Routes>
             <Route path="/dashboard" element={<Dashboard />} />
