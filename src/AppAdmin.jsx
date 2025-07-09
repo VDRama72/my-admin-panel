@@ -1,12 +1,34 @@
-﻿export default function AppAdmin() {
+﻿// ✅ FILE FIXED: src/AppAdmin.jsx
+
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar'; // ✅ ini sebelumnya yang error
+import Sidebar from './components/Sidebar';
+import Dashboard from './pages/Dashboard';
+import DashboardAdmin from './pages/dashboards/DashboardAdmin';
+import UserManagement from './pages/admin/UserManagement';
+import ProductManagementAdmin from './pages/admin/ProductManagementAdmin';
+import OrderManagementAdmin from './pages/admin/OrderManagementAdmin';
+import RentalManagementAdmin from './pages/admin/RentalManagementAdmin';
+import FinanceManagementAdmin from './pages/admin/FinanceManagementAdmin';
+import CSManagementAdmin from './pages/admin/CSManagementAdmin';
+import PromoManagementAdmin from './pages/admin/PromoManagementAdmin';
+import ReportAnalyticsAdmin from './pages/admin/ReportAnalyticsAdmin';
+import SystemSettings from './pages/admin/SystemSettings';
+import FinanceLastTransactions from './pages/finance/FinanceLastTransaction';
+
+export default function AppAdmin() {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      {/* Navbar selalu di atas */}
+      {/* ✅ Navbar at top */}
       <Navbar />
 
-      {/* Bagian utama: Sidebar + Main content */}
-      <div className="flex flex-col sm:flex-row flex-1">
+      {/* ✅ Responsive layout */}
+      <div className="flex flex-1 flex-col sm:flex-row overflow-hidden">
+        {/* Sidebar */}
         <Sidebar />
+
+        {/* Konten utama */}
         <main className="flex-1 overflow-y-auto p-4 sm:p-6">
           <Routes>
             <Route path="/dashboard" element={<Dashboard />} />
