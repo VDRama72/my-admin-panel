@@ -1,12 +1,13 @@
 ﻿// ✅ FILE: src/components/public/FoodCard.jsx
 
+// ✅ FILE: src/components/public/FoodCard.jsx
 import React from 'react';
 
-const baseURL = import.meta.env.VITE_BACKEND_URL?.replace('/api', '') || '';
+const baseURL = import.meta.env.VITE_BACKEND_URL?.replace('/api', '') || 'http://localhost:5000';
 
 export default function FoodCard({ food, onAddToCart }) {
   return (
-    <div className="bg-white border rounded-md shadow-sm hover:shadow-md transition-all overflow-hidden w-full max-w-[140px] sm:max-w-[160px] text-left">
+    <div className="bg-white border rounded-md shadow-sm hover:shadow-md transition-all overflow-hidden w-full max-w-[160px] sm:max-w-[180px] text-left">
       <div className="w-full aspect-[4/3] bg-gray-100 overflow-hidden">
         <img
           src={
@@ -25,9 +26,9 @@ export default function FoodCard({ food, onAddToCart }) {
       <div className="p-2 pt-1 pb-2">
         <h3 className="text-sm font-semibold text-gray-800 truncate">{food.name}</h3>
         <p className="text-red-600 text-sm font-bold mt-1">
-          Rp {food.price.toLocaleString('id-ID')}
+          Rp {food.price?.toLocaleString('id-ID') || '0'}
         </p>
-        <p className="text-[11px] text-gray-600 mt-0.5 line-clamp-2">{food.description}</p>
+        <p className="text-[11px] text-gray-600 mt-0.5 line-clamp-2">{food.description || '-'}</p>
         <button
           onClick={onAddToCart}
           className="mt-2 w-full text-xs bg-red-600 text-white py-1 rounded hover:bg-red-700 transition"
