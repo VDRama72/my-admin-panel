@@ -34,12 +34,20 @@ export default function App() {
   const [role, setRole] = useState(localStorage.getItem('role'));
   const [agreed, setAgreed] = useState(localStorage.getItem('disclaimerAccepted') === 'true');
 
+  // ✅ Tambahan untuk menghindari redirect balik ke login setelah logout
   useEffect(() => {
     const handleStorageChange = () => {
       setToken(localStorage.getItem('token'));
       setRole(localStorage.getItem('role'));
       setAgreed(localStorage.getItem('disclaimerAccepted') === 'true');
     };
+
+    // ✅ Tangani flag logout
+    if (localStorage.getItem('isLoggedOut') === 'true') {
+      localStorage.removeItem('isLoggedOut');
+      setToken(null);
+      setRole(null);
+    }
 
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
@@ -48,6 +56,7 @@ export default function App() {
   return (
     <Router>
       <Routes>
+
         {/* 🔓 Halaman Publik */}
         {!token && (
           <>
@@ -61,51 +70,51 @@ export default function App() {
           </>
         )}
 
-        {/* 🔐 Role-based Routing */}
-        {token && (
+        {/* 🔐 Admin */}
+        {token && role === 'admin' && (
           <>
-            {role === 'admin' && (
-              <>
-                <Route path="/*" element={<AppAdmin />} />
-                <Route path="/finance/last" element={<FinanceLastTransaction />} />
-              </>
-            )}
+            <Route path="/*" element={<AppAdmin />} />
+            <Route path="/finance/last" element={<FinanceLastTransaction />} />
+          </>
+        )}
 
-            {role === 'penjual' && (
-              <>
-                <Route path="/seller/disclaimer" element={<SellerDisclaimer />} />
-                {agreed ? (
-                  <Route path="/seller/*" element={<SellerLayout />}>
-                    <Route index element={<SellerDashboard />} />
-                    <Route path="products" element={<ProductManagementSeller />} />
-                  </Route>
-                ) : (
-                  <Route path="/seller/*" element={<Navigate to="/seller/disclaimer" />} />
-                )}
-              </>
-            )}
-
-            {role === 'driver' && (
-              <>
-                <Route path="/dashboard/driver" element={<DriverDashboardFinal />} />
-                <Route path="/driver/order/:id" element={<DpoiDriverOrderDetail />} />
-                <Route path="*" element={<Navigate to="/dashboard/driver" />} />
-              </>
-            )}
-
-            {role === 'keuangan' && (
-              <>
-                <Route path="/finance/user" element={<FinanceUserPage />} />
-                <Route path="*" element={<Navigate to="/finance/user" />} />
-              </>
-            )}
-
-            {/* ❌ Role tidak valid */}
-            {!['admin', 'penjual', 'driver', 'keuangan'].includes(role) && (
-              <Route path="*" element={<Navigate to="/" />} />
+        {/* 🔐 Seller */}
+        {token && role === 'penjual' && (
+          <>
+            <Route path="/seller/disclaimer" element={<SellerDisclaimer />} />
+            {agreed ? (
+              <Route path="/seller/*" element={<SellerLayout />}>
+                <Route index element={<SellerDashboard />} />
+                <Route path="products" element={<ProductManagementSeller />} />
+              </Route>
+            ) : (
+              <Route path="/seller/*" element={<Navigate to="/seller/disclaimer" />} />
             )}
           </>
         )}
+
+        {/* 🔐 Driver */}
+        {token && role === 'driver' && (
+          <>
+            <Route path="/dashboard/driver" element={<DriverDashboardFinal />} />
+            <Route path="/driver/order/:id" element={<DpoiDriverOrderDetail />} />
+            <Route path="*" element={<Navigate to="/dashboard/driver" />} />
+          </>
+        )}
+
+        {/* 🔐 Keuangan */}
+        {token && role === 'keuangan' && (
+          <>
+            <Route path="/finance/user" element={<FinanceUserPage />} />
+            <Route path="*" element={<Navigate to="/finance/user" />} />
+          </>
+        )}
+
+        {/* ❌ Role tidak valid */}
+        {token && !['admin', 'penjual', 'driver', 'keuangan'].includes(role) && (
+          <Route path="*" element={<Navigate to="/" />} />
+        )}
+
       </Routes>
     </Router>
   );

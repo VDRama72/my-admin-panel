@@ -2,17 +2,16 @@
 export function logout() {
   const role = localStorage.getItem('role');
 
-  // Hapus semua informasi auth
   localStorage.removeItem('token');
   localStorage.removeItem('role');
   localStorage.removeItem('userId');
   localStorage.removeItem('userName');
-  localStorage.removeItem('disclaimerAccepted');
 
-  // 🔁 Paksa sinkronisasi ke komponen yang memakai localStorage
+  // ✅ Tambahkan penanda logout
+  localStorage.setItem('isLoggedOut', 'true');
+
   window.dispatchEvent(new Event('storage'));
 
-  // ✅ Tambahkan delay agar sinkronisasi selesai
-setTimeout(() => {
+  // Tetap redirect ke homepage (etalase)
   window.location.href = '/';
-}, 100);
+}
