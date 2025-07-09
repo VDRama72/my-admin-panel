@@ -1,6 +1,6 @@
 ﻿// src/AppAdmin.jsx
 
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
@@ -14,13 +14,11 @@ import CSManagementAdmin from './pages/admin/CSManagementAdmin';
 import PromoManagementAdmin from './pages/admin/PromoManagementAdmin';
 import ReportAnalyticsAdmin from './pages/admin/ReportAnalyticsAdmin';
 import SystemSettings from './pages/admin/SystemSettings';
-
-// ✅ Import halaman tambahan
 import FinanceLastTransactions from './pages/finance/FinanceLastTransaction';
 
 export default function AppAdmin() {
   return (
-    <div className="flex flex-col sm:flex-row min-h-screen bg-gray-100 overflow-x-hidden">
+    <div className="flex flex-col min-h-screen bg-gray-100 sm:flex-row">
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Navbar />
