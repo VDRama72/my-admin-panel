@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 export default function UserManagement() {
   const [users, setUsers] = useState([]);
   const [roleFilter, setRoleFilter] = useState('semua');
@@ -19,13 +21,17 @@ export default function UserManagement() {
 
   const fetchUsers = async (filter = 'semua') => {
     try {
+      const token = localStorage.getItem('token');
+      const headers = { Authorization: `Bearer ${token}` };
+
       const url = filter === 'semua'
-        ? 'http://localhost:4000/api/users'
-        : `http://localhost:4000/api/users?role=${filter}`;
-      const res = await axios.get(url);
+        ? `${API_BASE}/users`
+        : `${API_BASE}/users?role=${filter}`;
+
+      const res = await axios.get(url, { headers });
       setUsers(res.data);
     } catch (err) {
-      console.error('❌ Gagal mengambil data pengguna:', err);
+      console.error('❌ Gagal mengambil data pengguna:', err.response?.data || err);
     }
   };
 
@@ -44,6 +50,9 @@ export default function UserManagement() {
     }
 
     try {
+      const token = localStorage.getItem('token');
+      const headers = { Authorization: `Bearer ${token}` };
+
       if (editMode && editingUser) {
         const payload = {
           name: editingUser.name,
@@ -56,7 +65,7 @@ export default function UserManagement() {
           payload.namaWarung = editingUser.namaWarung || '';
         }
 
-        await axios.put(`http://localhost:4000/api/users/${editingUserId}`, payload);
+        await axios.put(`${API_BASE}/users/${editingUserId}`, payload, { headers });
         setEditMode(false);
         setEditingUserId(null);
         setEditingUser(null);
@@ -72,7 +81,7 @@ export default function UserManagement() {
           payload.namaWarung = newUser.namaWarung || '';
         }
 
-        await axios.post('http://localhost:4000/api/users', payload);
+        await axios.post(`${API_BASE}/users`, payload, { headers });
       }
 
       setNewUser({
@@ -85,7 +94,7 @@ export default function UserManagement() {
 
       fetchUsers(roleFilter);
     } catch (err) {
-      console.error('❌ Gagal menyimpan pengguna:', err);
+      console.error('❌ Gagal menyimpan pengguna:', err.response?.data?.msg || err);
       alert(err.response?.data?.msg || 'Terjadi kesalahan');
     }
   };
@@ -93,10 +102,13 @@ export default function UserManagement() {
   const handleDelete = async (id) => {
     if (!window.confirm('Yakin hapus pengguna ini?')) return;
     try {
-      await axios.delete(`http://localhost:4000/api/users/${id}`);
+      const token = localStorage.getItem('token');
+      const headers = { Authorization: `Bearer ${token}` };
+
+      await axios.delete(`${API_BASE}/users/${id}`, { headers });
       fetchUsers(roleFilter);
     } catch (err) {
-      console.error('❌ Gagal menghapus pengguna:', err);
+      console.error('❌ Gagal menghapus pengguna:', err.response?.data || err);
     }
   };
 
@@ -120,36 +132,10 @@ export default function UserManagement() {
       {/* Form Tambah/Edit Pengguna */}
       {!editMode ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <input
-            type="text"
-            name="name"
-            placeholder="Nama"
-            value={newUser.name}
-            onChange={handleInputChange}
-            className="border p-2 rounded w-full"
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={newUser.email}
-            onChange={handleInputChange}
-            className="border p-2 rounded w-full"
-          />
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={newUser.password}
-            onChange={handleInputChange}
-            className="border p-2 rounded w-full"
-          />
-          <select
-            name="role"
-            value={newUser.role}
-            onChange={handleInputChange}
-            className="border p-2 rounded w-full"
-          >
+          <input type="text" name="name" placeholder="Nama" value={newUser.name} onChange={handleInputChange} className="border p-2 rounded w-full" />
+          <input type="email" name="email" placeholder="Email" value={newUser.email} onChange={handleInputChange} className="border p-2 rounded w-full" />
+          <input type="password" name="password" placeholder="Password" value={newUser.password} onChange={handleInputChange} className="border p-2 rounded w-full" />
+          <select name="role" value={newUser.role} onChange={handleInputChange} className="border p-2 rounded w-full">
             <option value="admin">Admin</option>
             <option value="keuangan">Keuangan</option>
             <option value="cs">CS</option>
@@ -158,48 +144,15 @@ export default function UserManagement() {
             <option value="pembeli">Pembeli</option>
           </select>
           {newUser.role === 'penjual' && (
-            <input
-              type="text"
-              name="namaWarung"
-              placeholder="Nama Warung"
-              value={newUser.namaWarung}
-              onChange={handleInputChange}
-              className="border p-2 rounded w-full"
-            />
+            <input type="text" name="namaWarung" placeholder="Nama Warung" value={newUser.namaWarung} onChange={handleInputChange} className="border p-2 rounded w-full" />
           )}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <input
-            type="text"
-            name="name"
-            placeholder="Nama"
-            value={editingUser.name}
-            onChange={(e) => setEditingUser({ ...editingUser, name: e.target.value })}
-            className="border p-2 rounded w-full"
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={editingUser.email}
-            onChange={(e) => setEditingUser({ ...editingUser, email: e.target.value })}
-            className="border p-2 rounded w-full"
-          />
-          <input
-            type="password"
-            name="password"
-            placeholder="Kosongkan jika tidak diubah"
-            value={editingUser.password}
-            onChange={(e) => setEditingUser({ ...editingUser, password: e.target.value })}
-            className="border p-2 rounded w-full"
-          />
-          <select
-            name="role"
-            value={editingUser.role}
-            onChange={(e) => setEditingUser({ ...editingUser, role: e.target.value })}
-            className="border p-2 rounded w-full"
-          >
+          <input type="text" name="name" placeholder="Nama" value={editingUser.name} onChange={(e) => setEditingUser({ ...editingUser, name: e.target.value })} className="border p-2 rounded w-full" />
+          <input type="email" name="email" placeholder="Email" value={editingUser.email} onChange={(e) => setEditingUser({ ...editingUser, email: e.target.value })} className="border p-2 rounded w-full" />
+          <input type="password" name="password" placeholder="Kosongkan jika tidak diubah" value={editingUser.password} onChange={(e) => setEditingUser({ ...editingUser, password: e.target.value })} className="border p-2 rounded w-full" />
+          <select name="role" value={editingUser.role} onChange={(e) => setEditingUser({ ...editingUser, role: e.target.value })} className="border p-2 rounded w-full">
             <option value="admin">Admin</option>
             <option value="keuangan">Keuangan</option>
             <option value="cs">CS</option>
@@ -208,31 +161,18 @@ export default function UserManagement() {
             <option value="pembeli">Pembeli</option>
           </select>
           {editingUser.role === 'penjual' && (
-            <input
-              type="text"
-              name="namaWarung"
-              placeholder="Nama Warung"
-              value={editingUser.namaWarung || ''}
-              onChange={(e) => setEditingUser({ ...editingUser, namaWarung: e.target.value })}
-              className="border p-2 rounded w-full"
-            />
+            <input type="text" name="namaWarung" placeholder="Nama Warung" value={editingUser.namaWarung || ''} onChange={(e) => setEditingUser({ ...editingUser, namaWarung: e.target.value })} className="border p-2 rounded w-full" />
           )}
         </div>
       )}
 
       {/* Tombol Simpan / Tambah */}
       <div className="flex gap-3 mb-6">
-        <button
-          onClick={handleCreateUser}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded"
-        >
+        <button onClick={handleCreateUser} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">
           {editMode ? 'Simpan Perubahan' : 'Tambah Pengguna'}
         </button>
         {editMode && (
-          <button
-            onClick={handleCancelEdit}
-            className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded"
-          >
+          <button onClick={handleCancelEdit} className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded">
             Batal Edit
           </button>
         )}
@@ -241,11 +181,7 @@ export default function UserManagement() {
       {/* Filter Role */}
       <div className="mb-4">
         <label className="mr-2 font-semibold">Filter Role:</label>
-        <select
-          value={roleFilter}
-          onChange={(e) => setRoleFilter(e.target.value)}
-          className="border p-2 rounded"
-        >
+        <select value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)} className="border p-2 rounded">
           <option value="semua">Semua</option>
           <option value="admin">Admin</option>
           <option value="keuangan">Keuangan</option>
@@ -274,18 +210,8 @@ export default function UserManagement() {
                 <td className="px-4 py-2">{u.email}</td>
                 <td className="px-4 py-2 capitalize">{u.role}</td>
                 <td className="px-4 py-2 space-x-2">
-                  <button
-                    onClick={() => handleEdit(u)}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-xs"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(u._id)}
-                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs"
-                  >
-                    Hapus
-                  </button>
+                  <button onClick={() => handleEdit(u)} className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-xs">Edit</button>
+                  <button onClick={() => handleDelete(u._id)} className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs">Hapus</button>
                 </td>
               </tr>
             ))}
