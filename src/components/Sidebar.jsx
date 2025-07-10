@@ -9,21 +9,21 @@ export default function Sidebar({ isOpen, onClose }) {
 
   return (
     <>
-      {/* Sidebar untuk desktop */}
+      {/* Sidebar Desktop */}
       <aside className="hidden sm:block w-64 bg-white shadow p-4">
         <SidebarContent location={location} linkClass={linkClass} activeClass={activeClass} />
       </aside>
 
-      {/* Sidebar mobile (overlay) */}
+      {/* Sidebar Mobile */}
       {isOpen && (
-        <div className="sm:hidden fixed inset-0 z-50 bg-black bg-opacity-40" onClick={onClose}>
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-40 sm:hidden" onClick={onClose}>
           <aside
             className="w-64 bg-white shadow p-4 h-full absolute left-0 top-0"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-blue-700">🛠️ Admin</h2>
-              <button onClick={onClose} className="text-red-600 text-lg font-bold">×</button>
+              <h2 className="text-lg font-bold text-blue-700">🛠️ Admin</h2>
+              <button onClick={onClose} className="text-red-600 font-bold text-lg">×</button>
             </div>
             <SidebarContent location={location} linkClass={linkClass} activeClass={activeClass} />
           </aside>

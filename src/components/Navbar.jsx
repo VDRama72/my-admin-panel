@@ -1,37 +1,34 @@
 ﻿// src/components/Navbar.jsx
 
-import React, { useEffect, useState } from 'react';
-import { logout } from '../utils/auth';
+import React from 'react';
 
-export default function Navbar() {
-  const [userName, setUserName] = useState('Pengguna');
-  const [role, setRole] = useState('');
-
-  useEffect(() => {
-    setUserName(localStorage.getItem('userName') || 'Pengguna');
-    setRole(localStorage.getItem('role') || '');
-  }, []);
-
+export default function Navbar({ onToggleSidebar }) {
   return (
-    <div className="bg-white shadow p-4 flex justify-between items-center px-4 sm:px-6">
-      <div className="text-lg sm:text-xl font-bold text-gray-800">
-        D’PoIN Admin Panel
-        <span className="text-sm text-gray-500 ml-3 font-normal hidden sm:inline">
-          ({role?.toUpperCase()})
-        </span>
-      </div>
-
-      <div className="flex items-center gap-2 sm:gap-4">
-        <span className="text-gray-700 font-medium hidden sm:block">
-          👋 Hai, {userName}
-        </span>
+    <header className="bg-white shadow px-4 py-3 flex justify-between items-center sticky top-0 z-40">
+      <div className="flex items-center gap-3">
+        {/* Tombol sidebar hanya di HP */}
         <button
-          onClick={logout}
-          className="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 text-sm"
+          onClick={onToggleSidebar}
+          className="sm:hidden text-indigo-600 text-2xl font-bold"
+        >
+          ☰
+        </button>
+        <h1 className="text-lg sm:text-xl font-bold text-indigo-700">D’PoIN Admin</h1>
+      </div>
+      <div>
+        <button
+          onClick={() => {
+            localStorage.setItem('isLoggedOut', 'true');
+            localStorage.removeItem('token');
+            localStorage.removeItem('role');
+            window.dispatchEvent(new Event('storage'));
+            window.location.href = '/';
+          }}
+          className="text-sm bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700"
         >
           Logout
         </button>
       </div>
-    </div>
+    </header>
   );
 }
