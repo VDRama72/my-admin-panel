@@ -32,7 +32,6 @@ export default function DpoiFood() {
     loadFoods();
   }, []);
 
-  // ✅ FIX: Cek order aktif, abaikan status dibatalkan dan cancelled
   useEffect(() => {
     const checkGuestOrder = async () => {
       const phone = localStorage.getItem('guestPhone');
@@ -139,32 +138,35 @@ export default function DpoiFood() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-red-600 text-white py-3 px-4 flex justify-between items-center sticky top-0 z-50 shadow">
+      <header className="bg-white text-indigo-700 py-3 px-4 flex justify-between items-center sticky top-0 z-50 shadow">
   <div className="flex items-center gap-2">
     <Link to="/" className="text-base flex items-center gap-1">
-      <span>🏠</span><span className="font-semibold">Etalase</span>
+      <span>🏠</span>
+      <span className="font-semibold">Etalase</span>
     </Link>
     <h1 className="text-base font-bold ml-2">🍱 D'PoIN Food</h1>
   </div>
-  <Link to="/login" className="text-xs bg-white text-red-600 px-3 py-1 rounded hover:bg-gray-100">
+  <Link to="/login" className="text-xs bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 transition">
     Login
   </Link>
 </header>
 
-      <section className="text-center py-10 bg-gradient-to-r from-red-50 via-white to-red-50">
-        <h2 className="text-3xl font-bold text-red-600 mb-2">Lapar? Tenang, Ada D’PoIN Food</h2>
-        <p className="text-gray-600">Temukan makanan terenak dari warung Dompu, siap antar ke tempatmu!</p>
+      <section className="text-center py-6 bg-gradient-to-r from-indigo-500 via-indigo-400 to-indigo-500 text-white">
+        <h2 className="text-3xl font-bold mb-2">Lapar? Tenang, Ada D’PoIN Food</h2>
+        <p className="text-sm">Temukan makanan terenak dari warung Dompu, siap antar ke tempatmu!</p>
       </section>
 
-      <div className="max-w-6xl mx-auto px-4 py-4">
-        <div className="flex flex-wrap gap-4 mb-4 justify-center">
+      <div className="max-w-6xl mx-auto px-4 py-6">
+        <div className="flex flex-wrap gap-2 mb-4 justify-center">
           {categories.map(cat => (
             <button
               key={cat}
               onClick={() => setCategory(cat)}
-              className={`px-4 py-2 rounded-full border ${
-                category === cat ? 'bg-red-600 text-white' : 'bg-white text-red-600 border-red-600'
-              } hover:shadow`}
+              className={`px-4 py-1.5 rounded-full text-sm border transition ${
+                category === cat
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-white text-indigo-600 border-indigo-600 hover:bg-indigo-100'
+              }`}
             >
               {cat.charAt(0).toUpperCase() + cat.slice(1)}
             </button>
@@ -177,14 +179,14 @@ export default function DpoiFood() {
             placeholder="Cari makanan..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="border p-2 w-full max-w-md rounded shadow"
+            className="border border-gray-300 rounded-full px-4 py-2 text-sm shadow-sm w-full max-w-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
 
         {filteredFoods.length === 0 ? (
           <p className="text-center text-gray-500">Tidak ada makanan ditemukan.</p>
         ) : (
-          <div className="flex flex-wrap gap-2 justify-center px-1">
+          <div className="flex flex-wrap gap-3 justify-center px-1">
             {filteredFoods.map(food => (
               <FoodCard key={food._id} food={food} onAddToCart={() => addToCart(food)} />
             ))}
@@ -195,14 +197,14 @@ export default function DpoiFood() {
           <div className="fixed bottom-6 right-6 bg-white shadow-xl rounded-xl border border-gray-200 p-5 w-80 max-w-full z-50 overflow-auto max-h-[90vh]">
             <div className="flex justify-between items-center mb-3">
               <h3 className="font-bold text-xl">🛒 Keranjang</h3>
-              <button onClick={cancelCheckout} className="text-red-600 font-semibold hover:text-red-800">✕</button>
+              <button onClick={cancelCheckout} className="text-indigo-600 font-semibold hover:text-indigo-800">✕</button>
             </div>
             <ul className="divide-y divide-gray-200 max-h-48 overflow-y-auto mb-4">
               {cart.map(item => (
                 <li key={item._id} className="flex justify-between py-2 items-center">
                   <span className="truncate max-w-[60%]">{item.name} x{item.qty}</span>
                   <span className="font-semibold">Rp {(item.qty * item.price).toLocaleString('id-ID')}</span>
-                  <button onClick={() => removeFromCart(item._id)} className="ml-3 text-sm text-red-500 hover:text-red-700">✕</button>
+                  <button onClick={() => removeFromCart(item._id)} className="ml-3 text-sm text-indigo-500 hover:text-indigo-700">✕</button>
                 </li>
               ))}
             </ul>
@@ -219,14 +221,14 @@ export default function DpoiFood() {
               Total: Rp {cart.reduce((sum, item) => sum + item.qty * item.price, 0).toLocaleString('id-ID')}
             </div>
 
-            <button onClick={handleCheckout} className="mt-4 w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 transition">
+            <button onClick={handleCheckout} className="mt-4 w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 transition">
               Checkout
             </button>
           </div>
         )}
       </div>
 
-      <footer className="bg-red-100 text-center py-5 mt-12 text-sm text-red-600 font-medium">
+      <footer className="bg-indigo-100 text-center py-5 mt-12 text-sm text-indigo-600 font-medium">
         © {new Date().getFullYear()} D'PoIN Food
       </footer>
     </div>
